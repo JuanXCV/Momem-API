@@ -13,7 +13,10 @@ const themeSchema = new Schema({
       type: ObjectId,
       ref: 'User',
     },
-    karma: Number,
+    karma: {
+      type: Number,
+      default: 0,
+    },
   }]
 });
 

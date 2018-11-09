@@ -12,6 +12,7 @@ require('dotenv').config();
 
 const auth = require('./routes/auth');
 const momem = require('./routes/momem');
+const theme = require('./routes/theme');
 
 mongoose.connect(process.env.MONGODB_URI, {
   keepAlive: true,
@@ -59,6 +60,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/auth', auth);
 app.use('/momem', momem);
+app.use('/theme', theme);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
