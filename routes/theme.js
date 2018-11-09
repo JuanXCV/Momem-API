@@ -3,6 +3,7 @@ const router = express.Router();
 
 const Momem = require('../models/momem')
 const Theme = require('../models/theme')
+const Font = require('../models/font')
 
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
@@ -36,26 +37,70 @@ router.post('/', (req, res, next) => {
   Theme.findOne({name: name})
   .then(theme => {
     if(theme){
-      theme.fonts.push({font: ownerId})
-      theme.save()
-      .then(result => {
-        res.status(200).json(result)
+
+      Font.find({font: ownerId})
+      .populate('theme')
+      .then(fonts => {
+
+        fonts.forEach( font => {
+          if(font.theme.name === name){
+            res.status(422).json({
+              message: 'Font yet added'
+            })
+          } 
+        })
+
+        const newFont = new Font({
+          font: ownerId,
+          theme: theme._id
+        })
+
+        newFont.save()
+        .then( succes => {
+          res.status(200).json({
+            message: 'Font added succesfully'
+          })
+        })
+        .catch( error => {
+          res.status(500).json({
+            error: 'Internal server error'
+          })
+        })
+
+
       })
       .catch(error => {
         res.status(500).json({
-          error: 'Internal server Error'
+          error: 'Internal server error'
         })
       })
+
     } else {
 
       const newTheme = new Theme({
-        name,
-        fonts: [{font: ownerId}]
+        name
       });
       
       newTheme.save()
       .then(theme => {
-        res.status(200).json(theme);
+
+        const newFont = new Font({
+          font: ownerId,
+          theme: theme._id
+        })
+
+        newFont.save()
+        .then( succes => {
+
+          res.status(200).json({
+            message: 'Theme added succesfully'
+          });
+        })
+        .catch( error => {
+          res.status(500).json({
+            error: 'Internal server error'
+          });
+        })
       })
       .catch( error => {
         res.status(500).json({
@@ -64,7 +109,6 @@ router.post('/', (req, res, next) => {
       });
 
     }
-
 
   })
   .catch(error => {
@@ -92,7 +136,6 @@ router.put('/:id', (req, res, next) => {
 
     theme.save()
     .then(succes => {
-
       res.status(200).json(succes);
     })
     .catch(error => {

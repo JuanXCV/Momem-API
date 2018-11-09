@@ -31,7 +31,7 @@ const userSchema = new Schema({
     },
     fonts:[{
       type: ObjectId,
-      ref: 'User'
+      ref: 'Font'
     }]
   }]
 }, {

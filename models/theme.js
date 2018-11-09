@@ -7,17 +7,7 @@ const themeSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-  },
-  fonts: [{
-    font:{
-      type: ObjectId,
-      ref: 'User',
-    },
-    karma: {
-      type: Number,
-      default: 0,
-    },
-  }]
+  }
 });
 
 const Theme = mongoose.model('Theme', themeSchema);
