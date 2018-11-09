@@ -55,12 +55,13 @@ router.post('/login', (req, res, next) => {
 router.post('/signup', (req, res, next) => {
   const {
     username,
-    password
+    password,
+    email
   } = req.body;
 
-  if (!username || !password) {
+  if (!username || !password || !email) {
     return res.status(422).json({
-      error: 'empty'
+      error: 'empty-fields'
     });
   }
 
@@ -74,18 +75,32 @@ router.post('/signup', (req, res, next) => {
         });
       }
 
-      const salt = bcrypt.genSaltSync(10);
-      const hashPass = bcrypt.hashSync(password, salt);
-
-      const newUser = User({
-        username,
-        password: hashPass,
-      });
-
-      return newUser.save().then(() => {
-        req.session.currentUser = newUser;
-        res.json(newUser);
-      });
+      User.findOne( {email} )
+      .then(result => {
+        if(result) {
+          return res.status(422).json({
+            error: 'email-not-unique'
+          });
+        }
+        
+        const salt = bcrypt.genSaltSync(10);
+        const hashPass = bcrypt.hashSync(password, salt);
+        
+        const newUser = User({
+          username,
+          email,
+          password: hashPass,
+          name: username,
+        });
+        
+        return newUser.save().then(() => {
+          req.session.currentUser = newUser;
+          res.json(newUser);
+        });
+        
+        
+      })
+      .catch(next)
     })
     .catch(next);
 });

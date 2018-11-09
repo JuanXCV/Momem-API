@@ -1,9 +1,39 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 
 const userSchema = new Schema({
-  username: String,
-  password: String,
+  username: {
+    type: String,
+    unique: true,
+    required: true,
+  },
+  email: {
+    type: String,
+    unique: true,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+  },
+  description: {
+    type: String,
+    default: "Say something about you"
+  },
+  filters: [{
+    theme:{
+      type: ObjectId,
+      ref: 'Theme'
+    },
+    fonts:[{
+      type: ObjectId,
+      ref: 'User'
+    }]
+  }]
 }, {
   timestamps: {
     createdAt: 'created_at',
