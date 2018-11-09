@@ -23,7 +23,9 @@ router.get('/list', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
   const {name} = req.body;
-  const ownerId = req.session.currentUser._id
+  // const ownerId = req.session.currentUser._id
+
+  const ownerId = ObjectId("5be41d00f599bd24d8cc712f");
 
   if (!name) {
     return res.status(422).json({
@@ -31,10 +33,10 @@ router.post('/', (req, res, next) => {
     });
   }
 
-  Theme.find({name: name})
+  Theme.findOne({name: name})
   .then(theme => {
     if(theme){
-      theme.fonts.push(ObjectId(req.session.currentUser._id))
+      theme.fonts.push({font: ownerId})
       theme.save()
       .then(result => {
         res.status(200).json(result)
@@ -48,12 +50,12 @@ router.post('/', (req, res, next) => {
 
       const newTheme = new Theme({
         name,
-        fonts: [{font: ObjectId(req.session.currentUser._id)}]
+        fonts: [{font: ownerId}]
       });
       
       newTheme.save()
-      .then(momem => {
-        res.status(200).json(momem);
+      .then(theme => {
+        res.status(200).json(theme);
       })
       .catch( error => {
         res.status(500).json({
@@ -72,14 +74,16 @@ router.post('/', (req, res, next) => {
   })
 });
 
-router.delete('/theme/:id', (req, res, next) => {
+router.put('/:id', (req, res, next) => {
   const themeId = req.params.id;
+  // const ownerId = req.session.currentUser._id
+  const ownerId = ObjectId("5be41d00f599bd24d8cc712f");
 
   Theme.findById(themeId)
   .populate('fonts')
   .then( theme => {
     theme.fonts.forEach((item,idx) => {
-      if (item.font._id.equals(req.session.currentUser._id)) {
+      if (item.font._id.equals(ownerId)) {
         theme.fonts.splice(idx, 1)
       }
     })
@@ -89,7 +93,7 @@ router.delete('/theme/:id', (req, res, next) => {
     theme.save()
     .then(succes => {
 
-      res.status(200).json(themeList);
+      res.status(200).json(succes);
     })
     .catch(error => {
       res.status(500).json({
