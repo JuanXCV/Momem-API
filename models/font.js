@@ -10,7 +10,7 @@ const fontSchema = new Schema({
   },
   theme: {
     type: ObjectId,
-    ref: 'theme'
+    ref: 'Theme'
   },
   karma: {
     type: Number,

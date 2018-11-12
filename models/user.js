@@ -24,6 +24,14 @@ const userSchema = new Schema({
     type: String,
     default: "Say something about you"
   },
+  image: {
+    type: String,
+    default: "http://profilepicturesdp.com/wp-content/uploads/2018/06/default-profile-picture-gmail-3.png"
+  },
+  backgroundImage: {
+    type: String,
+    default: "https://cdn-images-1.medium.com/max/1600/0*I-sI3u34g0ydRqyA"
+  },
   filters: [{
     theme:{
       type: ObjectId,

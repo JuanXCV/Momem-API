@@ -26,7 +26,7 @@ router.post('/', (req, res, next) => {
   const {name} = req.body;
   // const ownerId = req.session.currentUser._id
 
-  const ownerId = ObjectId("5be41d00f599bd24d8cc712f");
+  const ownerId = ObjectId("5be6af1eddc8a565f24c6e3e");
 
   if (!name) {
     return res.status(422).json({
@@ -42,36 +42,38 @@ router.post('/', (req, res, next) => {
       .populate('theme')
       .then(fonts => {
 
-        fonts.forEach( font => {
-          if(font.theme.name === name){
-            res.status(422).json({
-              message: 'Font yet added'
+        if(fonts.length>0){
+          fonts.forEach( font => {
+            if(font.theme.name === name){
+              return res.status(422).json({
+                message: 'Font yet added'
+              })
+            } 
+          })
+        } else {
+
+          const newFont = new Font({
+            font: ownerId,
+            theme: theme._id
+          })
+
+          newFont.save()
+          .then( succes => {
+            res.status(200).json({
+              message: 'Font added succesfully'
             })
-          } 
-        })
-
-        const newFont = new Font({
-          font: ownerId,
-          theme: theme._id
-        })
-
-        newFont.save()
-        .then( succes => {
-          res.status(200).json({
-            message: 'Font added succesfully'
           })
-        })
-        .catch( error => {
-          res.status(500).json({
-            error: 'Internal server error'
+          .catch( error => {
+            res.status(500).json({
+              error: 'Internal server error'
+            })
           })
-        })
-
-
+        }
       })
       .catch(error => {
+        console.log(error)
         res.status(500).json({
-          error: 'Internal server error'
+          error: error,
         })
       })
 
@@ -118,32 +120,14 @@ router.post('/', (req, res, next) => {
   })
 });
 
-router.put('/:id', (req, res, next) => {
+router.delete('/:id', (req, res, next) => {
   const themeId = req.params.id;
   // const ownerId = req.session.currentUser._id
-  const ownerId = ObjectId("5be41d00f599bd24d8cc712f");
+  const ownerId = ObjectId("5be6af1eddc8a565f24c6e3e");
 
-  Theme.findById(themeId)
-  .populate('fonts')
-  .then( theme => {
-    theme.fonts.forEach((item,idx) => {
-      if (item.font._id.equals(ownerId)) {
-        theme.fonts.splice(idx, 1)
-      }
-    })
-
-    // (item.font._id.toString() === req.session.currentUser._id.toString())
-
-    theme.save()
-    .then(succes => {
-      res.status(200).json(succes);
-    })
-    .catch(error => {
-      res.status(500).json({
-        error: 'Internal server error'
-      })
-    })
-
+  Font.findOneAndDelete({theme: ObjectId(themeId), font: ownerId})
+  .then( succes => {
+    res.status(200).json(succes)
 
   })
   .catch(error => {

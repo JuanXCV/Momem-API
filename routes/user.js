@@ -14,7 +14,7 @@ router.put('/addFilter/:id', (req, res, next) => {
   const themeId = req.params.id;
   // const userId = req.session.currentUser._id;
 
-  const userId = ObjectId("5be41d00f599bd24d8cc712f");
+  const userId = ObjectId("5be6af1eddc8a565f24c6e3e");
 
   User.findById(userId)
   .then(user => {
@@ -43,7 +43,7 @@ router.put('/filter/:themeId/addFont/:fontId', (req, res, next) => {
   const {themeId, fontId} = req.params;
   // const userId = req.session.currentUser._id;
 
-  const userId = ObjectId("5be41d00f599bd24d8cc712f");
+  const userId = ObjectId("5be6af1eddc8a565f24c6e3e");
 
   User.findById(userId)
   .then(user => {
@@ -80,6 +80,7 @@ router.get('/:id', (req, res, next) => {
 
   User.findById(userId)
   .populate('filters.fonts')
+  .populate('filters.font.theme')
   .then( user => {
     res.status(200).json(user);
   })
