@@ -10,7 +10,7 @@ const ObjectId = mongoose.Types.ObjectId;
 
 
 
-router.put('/addFilter/:id', (req, res, next) => {
+router.put('/filter/:id', (req, res, next) => {
   const themeId = req.params.id;
   // const userId = req.session.currentUser._id;
 
@@ -39,7 +39,7 @@ router.put('/addFilter/:id', (req, res, next) => {
   })
 });
 
-router.put('/filter/:themeId/addFont/:fontId', (req, res, next) => {
+router.put('/filter/:themeId/font/:fontId', (req, res, next) => {
   const {themeId, fontId} = req.params;
   // const userId = req.session.currentUser._id;
 
@@ -72,7 +72,6 @@ router.put('/filter/:themeId/addFont/:fontId', (req, res, next) => {
     })
   })
 });
-
 
 router.get('/:id', (req, res, next) => {
   const userId = req.params.id;

@@ -11,7 +11,6 @@ const ObjectId = mongoose.Types.ObjectId;
 router.get('/list', (req, res, next) => {
 
   Theme.find()
-  .populate('fonts')
   .then( themeList => {
     res.status(200).json(themeList);
   })
@@ -45,9 +44,7 @@ router.post('/', (req, res, next) => {
         if(fonts.length>0){
           fonts.forEach( font => {
             if(font.theme.name === name){
-              return res.status(422).json({
-                message: 'Font yet added'
-              })
+              return res.status(200).json(theme)
             } 
           })
         } else {
@@ -59,9 +56,7 @@ router.post('/', (req, res, next) => {
 
           newFont.save()
           .then( succes => {
-            res.status(200).json({
-              message: 'Font added succesfully'
-            })
+            res.status(200).json(theme)
           })
           .catch( error => {
             res.status(500).json({
@@ -94,9 +89,7 @@ router.post('/', (req, res, next) => {
         newFont.save()
         .then( succes => {
 
-          res.status(200).json({
-            message: 'Theme added succesfully'
-          });
+          res.status(200).json(theme);
         })
         .catch( error => {
           res.status(500).json({

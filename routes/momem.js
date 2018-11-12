@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const Momem = require('../models/momem')
+const Theme = require('../models/theme')
 
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
@@ -24,7 +25,7 @@ router.post('/', (req, res, next) => {
   const {title, content, themes, image, location} = req.body;
   const ownerId = req.session.currentUser._id
 
-  if (!title || !content || !image) {
+  if (!title || !content || !image || !themes) {
     return res.status(422).json({
       error: 'empty'
     });
@@ -35,6 +36,7 @@ router.post('/', (req, res, next) => {
     title,
     content,
     image,
+    themes,
   });
   
   newMomem.save()
