@@ -21,11 +21,43 @@ router.get('/list', (req, res, next) => {
   });
 });
 
-router.post('/', (req, res, next) => {
-  const {name} = req.body;
-  // const ownerId = req.session.currentUser._id
+router.get('/fonts/font/:id', (req, res, next) => {
+  const fontId = req.params.id;
 
-  const ownerId = ObjectId("5be6af1eddc8a565f24c6e3e");
+  Font.findById(fontId)
+  .populate('font')
+  .populate('theme')
+  .then( fontList => {
+    res.status(200).json(fontList);
+  })
+  .catch(error => {
+    res.status(500).json({
+      error: error,
+    });
+  });
+});
+
+router.get('/fonts/:id', (req, res, next) => {
+  const themeId = req.params.id;
+
+  Font.find({theme: themeId})
+  .populate('font')
+  .then( fontList => {
+    res.status(200).json(fontList);
+  })
+  .catch(error => {
+    res.status(500).json({
+      error: error,
+    });
+  });
+});
+
+
+router.post('/', (req, res, next) => {
+  let {name} = req.body;
+  // const ownerId = req.session.currentUser._id
+  name = name.toUpperCase();
+  const ownerId = req.session.currentUser._id
 
   if (!name) {
     return res.status(422).json({
@@ -37,7 +69,7 @@ router.post('/', (req, res, next) => {
   .then(theme => {
     if(theme){
 
-      Font.find({font: ownerId})
+      Font.find({font: ownerId, theme: theme._id})
       .populate('theme')
       .then(fonts => {
 
@@ -116,7 +148,7 @@ router.post('/', (req, res, next) => {
 router.delete('/:id', (req, res, next) => {
   const themeId = req.params.id;
   // const ownerId = req.session.currentUser._id
-  const ownerId = ObjectId("5be6af1eddc8a565f24c6e3e");
+  const ownerId = req.session.currentUser._id
 
   Font.findOneAndDelete({theme: ObjectId(themeId), font: ownerId})
   .then( succes => {

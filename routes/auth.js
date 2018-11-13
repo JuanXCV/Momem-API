@@ -8,7 +8,7 @@ const { isLoggedIn } = require('../helpers/middlewares');
 
 router.get('/me', (req, res, next) => {
   if (req.session.currentUser) {
-    res.json(req.session.currentUser);
+    res.status(200).json(req.session.currentUser);
   } else {
     res.status(404).json({
       error: 'not-found'
@@ -34,6 +34,9 @@ router.post('/login', (req, res, next) => {
   User.findOne({
       username
     })
+    .populate('filters.theme')
+    .populate('filters.fonts')
+    .populate('filters.fonts.font')
     .then((user) => {
       if (!user) {
         return res.status(404).json({
