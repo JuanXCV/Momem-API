@@ -27,7 +27,7 @@ router.post('/login', (req, res, next) => {
 
   if (!username || !password) {
     return res.status(422).json({
-      error: 'validation'
+      error: 'Empty fields'
     });
   }
 
@@ -40,7 +40,7 @@ router.post('/login', (req, res, next) => {
     .then((user) => {
       if (!user) {
         return res.status(404).json({
-          error: 'not-found'
+          error: 'User not exists'
         });
       }
       if (bcrypt.compareSync(password, user.password)) {
@@ -48,7 +48,7 @@ router.post('/login', (req, res, next) => {
         return res.status(200).json(user);
       }
       return res.status(404).json({
-        error: 'not-found'
+        error: 'Incorrect password'
       });
     })
     .catch(next);
@@ -64,7 +64,7 @@ router.post('/signup', (req, res, next) => {
 
   if (!username || !password || !email) {
     return res.status(422).json({
-      error: 'empty-fields'
+      error: 'Empty fields'
     });
   }
 
@@ -74,7 +74,7 @@ router.post('/signup', (req, res, next) => {
     .then((userExists) => {
       if (userExists) {
         return res.status(422).json({
-          error: 'username-not-unique'
+          error: 'User already exists'
         });
       }
 
@@ -82,7 +82,7 @@ router.post('/signup', (req, res, next) => {
       .then(result => {
         if(result) {
           return res.status(422).json({
-            error: 'email-not-unique'
+            error: 'Email already exists'
           });
         }
         

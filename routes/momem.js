@@ -12,6 +12,7 @@ router.get('/list', (req, res, next) => {
 
   Momem.find()
   .populate('owner')
+  .populate('themes')
   .then( momemList => {
     res.status(200).json(momemList);
   })
@@ -28,6 +29,7 @@ router.get('/theme/:themeId/font/:userId', (req, res, next) => {
 
   Momem.find({owner: userId})
   .populate('owner')
+  .populate('themes')
   .then( momemList => {
     
     let filtered =  momemList.filter(item => {
@@ -92,6 +94,7 @@ router.get('/:id', (req, res, next) => {
 
   Momem.findById(momemId)
   .populate('owner')
+  .populate('themes')
   .then( momem => {
     res.status(200).json(momem);
   })
@@ -138,15 +141,6 @@ router.delete('/:id', (req, res, next) => {
     });
   });
 });
-
-
-
-
-
-
-
-
-
 
 
 module.exports = router;

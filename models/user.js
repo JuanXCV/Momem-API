@@ -26,11 +26,11 @@ const userSchema = new Schema({
   },
   image: {
     type: String,
-    default: "http://profilepicturesdp.com/wp-content/uploads/2018/06/default-profile-picture-gmail-3.png"
+    default: "/images/avatar.png"
   },
   backgroundImage: {
     type: String,
-    default: "https://cdn-images-1.medium.com/max/1600/0*I-sI3u34g0ydRqyA"
+    default: "/images/background.png"
   },
   filters: [{
     theme:{
