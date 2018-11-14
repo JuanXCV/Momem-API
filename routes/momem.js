@@ -27,7 +27,7 @@ router.get('/theme/:themeId/font/:userId', (req, res, next) => {
   const {themeId, userId} = req.params;
 
   Momem.find({owner: userId})
-
+  .populate('owner')
   .then( momemList => {
     
     let filtered =  momemList.filter(item => {
@@ -53,13 +53,17 @@ router.get('/theme/:themeId/font/:userId', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  const {title, content, themes, image, location} = req.body;
+  let {title, content, themes, image, location} = req.body;
   const ownerId = req.session.currentUser._id
 
-  if (!title || !content || !image || !themes) {
+  if (!title || !content || !themes) {
     return res.status(422).json({
       error: 'empty'
     });
+  }
+
+  if(image === "") {
+    image = "/images/momem.jpg"
   }
 
   const newMomem = new Momem({
