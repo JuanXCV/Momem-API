@@ -8,7 +8,6 @@ const User = require('../models/user')
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
-
 router.get('/momem/:id', (req, res, next) => {
   const userId = req.params.id
 
@@ -65,6 +64,49 @@ router.put('/filter/:id', (req, res, next) => {
   })
 });
 
+router.delete('/filter/:id', (req, res, next) => {
+  const themeId = req.params.id;
+  // const userId = req.session.currentUser._id;
+
+  const userId = req.session.currentUser._id
+
+  User.findById(userId)
+  .then(user => {
+
+    user.filters.forEach((filter, idx) => {
+      if (filter.theme.equals(ObjectId(themeId))) {
+        user.filters.splice(idx,1)
+      }
+    })
+    user.save()
+    .then(succes => {
+
+      User.findById(userId)
+      .populate('filters.theme')
+      .populate('filters.fonts')
+      .then(item => {
+        req.session.currentUser = item;
+        res.status(200).json(item)
+      })
+      .catch(error => {
+        res.status(500).json({
+          error: 'Internal server error'
+        })
+      })
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: 'Internal server error'
+      })
+    })
+  })
+  .catch(error => {
+    res.status(500).json({
+      error: 'Internal server error'
+    })
+  })
+});
+
 router.put('/filter/:themeId/font/:fontId', (req, res, next) => {
   const {themeId, fontId} = req.params;
   // const userId = req.session.currentUser._id;
@@ -77,6 +119,57 @@ router.put('/filter/:themeId/font/:fontId', (req, res, next) => {
     user.filters.forEach((filter,idx) => {
       if (filter.theme.equals(ObjectId(themeId))) {
         filter.fonts.push(fontId)
+      }
+    })
+
+    user.save()
+    .then(succes => {
+
+      User.findById(userId)
+      .populate('filters.fonts')
+      .populate('filters.theme')
+      .then(item => {
+        req.session.currentUser = item;
+        res.status(200).json(item)
+      })
+      .catch(error => {
+        res.status(500).json({
+          error: 'Internal server error'
+        })
+      })
+
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: 'Internal server error'
+      })
+    })
+  })
+  .catch(error => {
+    res.status(500).json({
+      error: 'Internal server error'
+    })
+  })
+});
+
+router.delete('/filter/:themeId/font/:fontId', (req, res, next) => {
+  const {themeId, fontId} = req.params;
+  // const userId = req.session.currentUser._id;
+
+  const userId = req.session.currentUser._id
+
+  User.findById(userId)
+  .then(user => {
+
+    user.filters.forEach((filter,idz) => {
+      if (filter.theme.equals(ObjectId(themeId))) {
+        
+        filter.fonts.forEach((font, idx) => {
+          if (font.equals(ObjectId(fontId))){
+            filter.fonts.splice(idx, 1)
+          }
+        })
+
       }
     })
 

@@ -18,6 +18,7 @@ const momemSchema = new Schema({
   image: {
     type: String,
     required: true,
+    default: "https://www.canva.com/design/DADIsoAwt28/DPE51s2pmWRXv7OvWmXcBw/view?website#2"
   },
   themes: [{
     type: ObjectId,

@@ -6,6 +6,7 @@ const Theme = require('../models/theme')
 
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+const Font = require('../models/font')
 
 router.get('/list', (req, res, next) => {
 
@@ -13,6 +14,36 @@ router.get('/list', (req, res, next) => {
   .populate('owner')
   .then( momemList => {
     res.status(200).json(momemList);
+  })
+  .catch(error => {
+    res.status(500).json({
+      error: error,
+    });
+  });
+});
+
+router.get('/theme/:themeId/font/:userId', (req, res, next) => {
+
+  const {themeId, userId} = req.params;
+
+  Momem.find({owner: userId})
+
+  .then( momemList => {
+    
+    let filtered =  momemList.filter(item => {
+      let coincidence = false;
+
+      item.themes.forEach(theme => {
+        if (theme.equals(ObjectId(themeId))) {
+          coincidence = true;
+        }
+      })
+
+      return coincidence
+    })
+
+    res.status(200).json(filtered)
+
   })
   .catch(error => {
     res.status(500).json({
