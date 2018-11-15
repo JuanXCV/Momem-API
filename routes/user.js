@@ -27,7 +27,6 @@ router.get('/momem/:id', (req, res, next) => {
 
 router.put('/filter/:id', (req, res, next) => {
   const themeId = req.params.id;
-  // const userId = req.session.currentUser._id;
 
   const userId = req.session.currentUser._id
 
@@ -66,7 +65,6 @@ router.put('/filter/:id', (req, res, next) => {
 
 router.delete('/filter/:id', (req, res, next) => {
   const themeId = req.params.id;
-  // const userId = req.session.currentUser._id;
 
   const userId = req.session.currentUser._id
 
@@ -109,7 +107,6 @@ router.delete('/filter/:id', (req, res, next) => {
 
 router.put('/filter/:themeId/font/:fontId', (req, res, next) => {
   const {themeId, fontId} = req.params;
-  // const userId = req.session.currentUser._id;
 
   const userId = req.session.currentUser._id
 
@@ -154,7 +151,6 @@ router.put('/filter/:themeId/font/:fontId', (req, res, next) => {
 
 router.delete('/filter/:themeId/font/:fontId', (req, res, next) => {
   const {themeId, fontId} = req.params;
-  // const userId = req.session.currentUser._id;
 
   const userId = req.session.currentUser._id
 

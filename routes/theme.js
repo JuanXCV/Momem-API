@@ -55,7 +55,6 @@ router.get('/fonts/:id', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
   let {name} = req.body;
-  // const ownerId = req.session.currentUser._id
   name = name.toUpperCase();
   const ownerId = req.session.currentUser._id
 
@@ -147,7 +146,6 @@ router.post('/', (req, res, next) => {
 
 router.delete('/:id', (req, res, next) => {
   const themeId = req.params.id;
-  // const ownerId = req.session.currentUser._id
   const ownerId = req.session.currentUser._id
 
   Font.findOneAndDelete({theme: ObjectId(themeId), font: ownerId})
