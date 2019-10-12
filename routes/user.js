@@ -88,19 +88,19 @@ router.delete('/filter/:id', (req, res, next) => {
       })
       .catch(error => {
         res.status(500).json({
-          error: 'Internal server error'
+          error: error
         })
       })
     })
     .catch(error => {
       res.status(500).json({
-        error: 'Internal server error'
+        error: error
       })
     })
   })
   .catch(error => {
     res.status(500).json({
-      error: 'Internal server error'
+      error: error
     })
   })
 });
