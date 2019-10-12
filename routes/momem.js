@@ -60,7 +60,7 @@ router.post('/', (req, res, next) => {
 
   if (!title || !content || !themes) {
     return res.status(422).json({
-      error: 'empty'
+      error: 'Empty fields'
     });
   }
 
